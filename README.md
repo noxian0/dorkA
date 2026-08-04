@@ -13,6 +13,8 @@ your computer, with no account or hosted backend required.
 
 - Multi-engine Query Builder for Google, Bing, Yandex, GitHub Code Search, and
   Wayback Machine CDX.
+- Social platform path shortcuts for Instagram posts and reels, Facebook posts
+  and reels, plus X/Twitter status pages.
 - Engine-specific command chips, syntax guidance, scope checks, and live query
   preview.
 - Manual browser opening only - searches open only after you choose the action.

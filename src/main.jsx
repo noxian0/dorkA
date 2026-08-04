@@ -472,6 +472,93 @@ const engineLibraries = {
       },
     ],
   },
+  "Social platforms": {
+    label: "Social platform paths",
+    operators: [
+      {
+        token: "Instagram posts (/p/)",
+        insert: 'site:instagram.com/p/ ""',
+        category: "Instagram",
+        syntax: 'site:instagram.com/p/ "yourusername"',
+        example: 'site:instagram.com/p/ "yourusername"',
+        explanation: "Searches Google results limited to Instagram post URLs.",
+        combine: "Replace yourusername with a distinct public name or phrase.",
+        limitations:
+          "Results only include public post pages Google has indexed.",
+      },
+      {
+        token: "Instagram reels (/reel/)",
+        insert: 'site:instagram.com/reel/ ""',
+        category: "Instagram",
+        syntax: 'site:instagram.com/reel/ "yourusername"',
+        example: 'site:instagram.com/reel/ "yourusername"',
+        explanation: "Searches Google results limited to Instagram reel URLs.",
+        combine:
+          "Use an exact username or a phrase from a public caption or comment.",
+        limitations:
+          "Instagram may limit what search engines can crawl or retain.",
+      },
+      {
+        token: "Instagram public pages",
+        insert: 'site:instagram.com ""',
+        category: "Instagram",
+        syntax: 'site:instagram.com "yourusername"',
+        example: 'site:instagram.com "yourusername"',
+        explanation:
+          "Searches public Instagram pages without restricting the URL type.",
+        combine:
+          "Use this first, then switch to /p/ or /reel/ when results are too broad.",
+        limitations:
+          "It does not confirm that every visible Instagram page is indexed.",
+      },
+      {
+        token: "Facebook public posts",
+        insert: 'site:facebook.com inurl:posts ""',
+        category: "Facebook",
+        syntax: 'site:facebook.com inurl:posts "yourusername"',
+        example: 'site:facebook.com inurl:posts "yourusername"',
+        explanation: "Focuses on Facebook URLs that contain the posts route.",
+        combine: "Add a public name or a distinctive post phrase in quotes.",
+        limitations:
+          "Facebook visibility settings and indexing can leave gaps in results.",
+      },
+      {
+        token: "Facebook reels (/reel/)",
+        insert: 'site:facebook.com/reel/ ""',
+        category: "Facebook",
+        syntax: 'site:facebook.com/reel/ "yourusername"',
+        example: 'site:facebook.com/reel/ "yourusername"',
+        explanation: "Searches Google results limited to Facebook reel URLs.",
+        combine:
+          "Use a public creator name or a phrase from the reel description.",
+        limitations: "Only public reels that Google indexed can appear.",
+      },
+      {
+        token: "X posts (/status/)",
+        insert: 'site:x.com inurl:status ""',
+        category: "X / Twitter",
+        syntax: 'site:x.com inurl:status "yourusername"',
+        example: 'site:x.com inurl:status "yourusername"',
+        explanation: "Focuses on X post URLs that contain the status route.",
+        combine:
+          "Pair it with an exact public handle or a distinctive post phrase.",
+        limitations: "X indexing and result visibility can change over time.",
+      },
+      {
+        token: "Legacy Twitter posts (/status/)",
+        insert: 'site:twitter.com inurl:status ""',
+        category: "X / Twitter",
+        syntax: 'site:twitter.com inurl:status "yourusername"',
+        example: 'site:twitter.com inurl:status "yourusername"',
+        explanation:
+          "Searches older Twitter-domain post URLs that remain in Google.",
+        combine:
+          "Use alongside the X query when looking at older indexed pages.",
+        limitations:
+          "The older twitter.com domain may return fewer or redirected results.",
+      },
+    ],
+  },
 };
 
 const allLibraryOperators = Object.entries(engineLibraries).flatMap(
@@ -698,13 +785,41 @@ function Icon({ name, size = 18, stroke = 1.8 }) {
 
 function BrandMark({ small = false }) {
   return (
-    <div
+    <svg
       className={`brand-mark ${small ? "brand-mark-small" : ""}`}
+      viewBox="0 0 64 64"
       aria-label="dA app mark"
+      role="img"
     >
-      <span className="mark-d">d</span>
-      <span className="mark-a">A</span>
-    </div>
+      <rect x="2" y="2" width="60" height="60" rx="17" fill="#0e0e11" />
+      <rect
+        x="2.75"
+        y="2.75"
+        width="58.5"
+        height="58.5"
+        rx="16.25"
+        stroke="#e53935"
+        strokeOpacity="0.34"
+        strokeWidth="1.5"
+      />
+      <path
+        d="M34 13v20.8c0 10.1-5.5 16.3-14.1 16.3C11.9 50.1 6 43.8 6 34.7s5.9-15.3 13.9-15.3c5.8 0 10.2 2.8 14.1 7.4"
+        fill="none"
+        stroke="#e53935"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="6.3"
+      />
+      <path
+        d="M34 49 46.5 14l11.8 35M39.2 36.5h14.5"
+        fill="none"
+        stroke="#ff8d89"
+        strokeLinecap="round"
+        strokeLinejoin="miter"
+        strokeWidth="5.2"
+      />
+      <circle cx="34" cy="13" r="3.15" fill="#ff6b66" />
+    </svg>
   );
 }
 
@@ -761,6 +876,7 @@ function validateQuery(query, engine = "Google") {
     Bing: "site:example.com",
     Yandex: "site:example.com",
     GitHub: "repo:octocat/Hello-World",
+    "Social platforms": "site:instagram.com/p/",
   };
   if (!extractScope(trimmed, engine))
     warnings.push(
@@ -1041,9 +1157,10 @@ function QueryBuilder({
       parentheses: "()",
     };
     const insertion =
-      builderEngine === "Google"
+      operator.insert ??
+      (builderEngine === "Google"
         ? (googleInsertions[operator.token] ?? operator.token)
-        : operator.token;
+        : operator.token);
     setQuery((current) => {
       if (!current) return insertion;
       const separator =
@@ -1338,13 +1455,13 @@ function OperatorLibrary({ setQuery }) {
                 <span>Limitation</span>
                 <p>{selected.limitations}</p>
               </div>
-              {engine === "Google" && (
+              {(engine === "Google" || engine === "Social platforms") && (
                 <Button
                   icon="plus"
                   onClick={() =>
                     setQuery(
                       (current) =>
-                        `${current}${current ? " " : ""}${selected.example}`,
+                        `${current}${current ? " " : ""}${selected.insert ?? selected.example}`,
                     )
                   }
                 >
