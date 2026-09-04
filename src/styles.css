@@ -214,15 +214,21 @@ code {
 }
 .brand {
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 11px;
   color: inherit;
   text-decoration: none;
+}
+.brand-copy {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
 }
 .brand-mark {
   display: block;
   width: 39px;
   height: 35px;
+  margin-top: 1px;
   flex: 0 0 auto;
   filter: drop-shadow(0 0 10px rgba(229, 57, 53, 0.3));
 }
@@ -237,6 +243,15 @@ code {
 }
 .brand-name span {
   color: var(--red-light);
+}
+.brand-contact {
+  display: grid;
+  gap: 1px;
+  color: var(--quiet);
+  font-family: "DM Mono", monospace;
+  font-size: 8.5px;
+  letter-spacing: 0.01em;
+  line-height: 1.35;
 }
 .sidebar nav {
   margin-top: 31px;

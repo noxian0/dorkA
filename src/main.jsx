@@ -2199,8 +2199,14 @@ function App() {
             }}
           >
             <BrandMark />
-            <span className="brand-name">
-              dork<span>A</span>
+            <span className="brand-copy">
+              <span className="brand-name">
+                dork<span>A</span>
+              </span>
+              <span className="brand-contact">
+                <span>Discord: noxian_</span>
+                <span>GitHub: noxian0</span>
+              </span>
             </span>
           </a>
         </div>
